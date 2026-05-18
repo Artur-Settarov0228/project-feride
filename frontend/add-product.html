@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yangi Mahsulot — Masion Feride</title>
+    <link rel="stylesheet" href="assets/css/main.css?v=1.1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 60px auto;
+            background: var(--card-bg);
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            color: white;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #1a2c42;
+            font-family: inherit;
+            color: white;
+            transition: var(--transition);
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: #233a57;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 2px;
+        }
+        .submit-btn:hover {
+            background: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+        select option {
+            background: var(--primary);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <div class="container">
+                <span><i class="fas fa-crown"></i> Eksklyuziv Kolleksiya — Masion Feride</span>
+                <div class="header-links">
+                    <a href="index.html" style="color:white; text-decoration:none; margin-left:20px;">Asosiy</a>
+                    <a href="categories.html" style="color:white; text-decoration:none; margin-left:20px;">Kategoriyalar</a>
+                    <a href="wishlist.html" style="color:white; text-decoration:none; margin-left:20px;">Saralanganlar</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-main container">
+            <div class="logo">
+                <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <h1>Masion <span>Feride</span></h1>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="form-container animate-slide-up">
+            <h2 style="font-family: 'Playfair Display'; font-size: 42px; margin-bottom: 40px; text-align: center; color: white;">Yangi Mahsulot Qo'shish</h2>
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label>Mahsulot nomi</label>
+                    <input type="text" id="prodName" placeholder="Masalan: Silk Evening Dress" required>
+                </div>
+                <div class="form-group">
+                    <label>Tavsif</label>
+                    <textarea id="prodDesc" rows="4" placeholder="Mahsulot haqida batafsil ma'lumot..."></textarea>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label>Narxi (so'm)</label>
+                        <input type="number" id="prodPrice" placeholder="1200000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Eski narxi (ixtiyoriy)</label>
+                        <input type="number" id="prodOldPrice" placeholder="1500000">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Kategoriya</label>
+                    <select id="prodCat" required>
+                        <option value="Kostyumlar">Kostyumlar</option>
+                        <option value="Ko'ylaklar">Ko'ylaklar</option>
+                        <option value="Sumkalar">Sumkalar</option>
+                        <option value="Poyabzallar">Poyabzallar</option>
+                        <option value="Aksessuarlar">Aksessuarlar</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Rasm URL</label>
+                    <input type="url" id="prodImage" placeholder="https://images.unsplash.com/..." required>
+                </div>
+                <div class="form-group">
+                    <label>Badge (masalan: YANGI, -20%)</label>
+                    <input type="text" id="prodBadge" placeholder="YANGI">
+                </div>
+                <button type="submit" class="submit-btn">MAHSULOTNI QO'SHISH</button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div>
+                <h3>Masion Feride</h3>
+                <p style="opacity: 0.6; font-size: 14px; line-height: 2;">O'zbekistondagi eng eksklyuziv ayollar kiyimi butigi. Biz faqat eng sara va hashamatli liboslarni taklif etamiz.</p>
+            </div>
+            <div>
+                <h4>Butik</h4>
+                <ul>
+                    <li><a href="index.html">Yangi kolleksiya</a></li>
+                    <li><a href="categories.html">Barcha kiyimlar</a></li>
+                    <li><a href="categories.html?category=Aksessuarlar">Aksessuarlar</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Mijozlar</h4>
+                <ul>
+                    <li><a href="#">Yetkazib berish</a></li>
+                    <li><a href="#">Qaytarish</a></li>
+                    <li><a href="#">Maxfiylik</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Kontaktlar</h4>
+                <p style="opacity: 0.6; font-size: 14px; margin-bottom: 20px;">Toshkent, Amir Temur ko'chasi 108</p>
+                <div style="font-size: 20px; display: flex; gap: 20px;">
+                    <a href="https://instagram.com/bakhriddinova__f" target="_blank" style="color: inherit;"><i class="fab fa-instagram"></i></a>
+                    <a href="https://t.me/bakhriddinova__f" target="_blank" style="color: inherit;"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js?v=1.4"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Mahsulot qo\'shish uchun avval tizimga kiring!');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/auth/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const user = await res.json();
+                
+                if (!user.is_seller && !user.is_admin) {
+                    alert('Siz mahsulot qo\'shish huquqiga ega emassiz!');
+                    window.location.href = 'index.html';
+                }
+            } catch (err) {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Ro'yxatdan O'tish — Masion Feride</title>
+    <link rel="stylesheet" href="assets/css/main.css?v=1.5">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .register-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        .register-card {
+            background: var(--secondary);
+            border: 1px solid var(--glass-border);
+            padding: 60px;
+            border-radius: 40px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: var(--shadow-premium);
+            backdrop-filter: blur(20px);
+            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .register-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 38px;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            color: white;
+        }
+        .register-card p.subtitle {
+            color: var(--text-dim);
+            margin-bottom: 40px;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+        .back-home {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+            z-index: 10;
+        }
+        .back-home:hover {
+            color: var(--gold);
+            transform: translateX(-5px);
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        .input-group i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold);
+            font-size: 18px;
+            opacity: 0.6;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 20px 20px 20px 55px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            color: white;
+            outline: none;
+            transition: var(--transition);
+            font-size: 15px;
+        }
+        .input-group input:focus {
+            border-color: var(--gold);
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+        }
+        .login-link {
+            margin-top: 30px;
+            font-size: 14px;
+            color: var(--text-dim);
+        }
+        .login-link a {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
+    <a href="index.html" class="back-home">
+        <i class="fas fa-arrow-left"></i> Saytga qaytish
+    </a>
+
+    <div class="register-container">
+        <div class="register-card">
+            <h2>Masion Feride</h2>
+            <p class="subtitle">ADMIN RO'YXATDAN O'TISH</p>
+            
+            <form id="adminRegForm">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="adminName" placeholder="To'liq Ism" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-phone"></i>
+                    <input type="text" id="adminPhone" placeholder="Telefon Raqam" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="adminPassword" placeholder="Yangi Parol" required>
+                </div>
+                
+                <button type="submit" class="submit-btn">ADMIN YARATISH</button>
+            </form>
+
+            <p class="login-link">
+                Allaqachon hisobingiz bormi? <a href="admin.html">Kirish</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js?v=1.5"></script>
+    <script>
+        document.getElementById('adminRegForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const full_name = document.getElementById('adminName').value;
+            const phone = document.getElementById('adminPhone').value;
+            const password = document.getElementById('adminPassword').value;
+
+            const submitBtn = e.target.querySelector('button');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = 'YUKLANMOQDA...';
+            submitBtn.disabled = true;
+
+            try {
+                const res = await fetch(`${API_BASE}/auth/register-admin`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ full_name, phone, password, is_seller: true })
+                });
+
+                if (!res.ok) {
+                    const errData = await res.json();
+                    throw new Error(errData.detail || 'Xatolik yuz berdi');
+                }
+                
+                alert('Admin muvaffaqiyatli yaratildi! Endi tizimga kiring.');
+                window.location.href = 'admin.html';
+            } catch (err) {
+                alert(err.message);
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# Python virtual environment
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Log files
+*.log
+backend.log
+frontend.log
+bot.log
+
+# Database
+masion_feride.db
+*.db
+*.sqlite3
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env

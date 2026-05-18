@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — Masion Feride</title>
+    <link rel="stylesheet" href="assets/css/main.css?v=1.5">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #02060c; color: #f8fafc; overflow-y: auto; }
+        
+        .admin-layout { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+        
+        /* SIDEBAR */
+        .sidebar { 
+            background: rgba(15, 23, 42, 0.9); 
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 50px 30px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+        
+        .sidebar-logo { 
+            font-family: 'Playfair Display'; 
+            font-size: 28px; 
+            margin-bottom: 60px; 
+            color: #d4af37;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li { margin-bottom: 15px; }
+        .sidebar-menu a { 
+            color: #94a3b8; 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .sidebar-menu a:hover, .sidebar-menu a.active { 
+            background: rgba(212, 175, 55, 0.1); 
+            color: #d4af37; 
+            transform: translateX(5px);
+        }
+        
+        /* MAIN CONTENT */
+        .main-content { padding: 60px; background: radial-gradient(circle at top right, #0f172a, #02060c); }
+        
+        .header-admin { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 60px; 
+        }
+        .header-admin h1 { font-family: 'Playfair Display'; font-size: 42px; font-weight: 700; }
+        
+        /* STATS */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 60px; }
+        .stat-card { 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 35px; 
+            border-radius: 25px; 
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover { border-color: #d4af37; transform: translateY(-10px); }
+        .stat-card i { font-size: 32px; color: #d4af37; margin-bottom: 20px; }
+        .stat-card h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: #94a3b8; margin-bottom: 15px; }
+        .stat-card .value { font-size: 36px; font-weight: 800; }
+
+        /* TABLES */
+        .glass-panel { 
+            background: rgba(255, 255, 255, 0.02); 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 40px; 
+            border-radius: 30px; 
+            backdrop-filter: blur(10px);
+        }
+        .glass-panel h2 { margin-bottom: 35px; font-family: 'Playfair Display'; font-size: 28px; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: #94a3b8; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.03); font-size: 15px; }
+        tr:hover { background: rgba(255, 255, 255, 0.01); }
+
+        .role-badge { 
+            padding: 6px 14px; 
+            border-radius: 8px; 
+            font-size: 11px; 
+            font-weight: 800; 
+            text-transform: uppercase;
+        }
+        .role-admin { background: rgba(212, 175, 55, 0.15); color: #d4af37; border: 1px solid #d4af37; }
+        .role-seller { background: rgba(0, 212, 255, 0.15); color: #00d4ff; border: 1px solid #00d4ff; }
+        .role-user { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid #94a3b8; }
+
+        /* LOGIN OVERLAY */
+        #adminLogin { 
+            position: fixed; 
+            inset: 0; 
+            background: #02060c; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 9999;
+        }
+        .login-card { 
+            background: #0f172a; 
+            padding: 60px; 
+            border-radius: 35px; 
+            width: 100%; 
+            max-width: 450px; 
+            text-align: center; 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+        }
+
+        /* MODAL FOR ADDING USER */
+        .admin-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(15px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .admin-modal-content {
+            background: #0f172a;
+            padding: 50px;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            animation: fadeInUp 0.5s ease;
+        }
+        .admin-modal h2 { font-family: 'Playfair Display'; margin-bottom: 30px; }
+        .admin-modal input, .admin-modal select {
+            width: 100%;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            background: #02060c;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: white;
+            outline: none;
+        }
+        .btn-group { display: flex; gap: 15px; margin-top: 20px; }
+        .btn-cancel { background: #1e293b; color: white; border: none; padding: 15px; border-radius: 12px; cursor: pointer; flex: 1; font-weight: 700; }
+        .btn-save { background: #d4af37; color: #02060c; border: none; padding: 15px; border-radius: 12px; cursor: pointer; flex: 2; font-weight: 800; }
+
+        .btn-add-user {
+            background: #d4af37;
+            color: #02060c;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        .btn-add-user:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2); }
+    </style>
+</head>
+<body>
+    <div id="adminLogin">
+        <div class="login-card">
+            <h1 style="font-family: 'Playfair Display'; font-size: 36px; margin-bottom: 15px; color: #d4af37;">Masion Admin</h1>
+            <p style="color: #94a3b8; margin-bottom: 40px; font-size: 14px;">Boshqaruv tizimiga xush kelibsiz</p>
+            <form id="adminLoginForm">
+                <input type="text" id="adminPhone" placeholder="Login / Telefon" style="width: 100%; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; background: #02060c; color: white;" required>
+                <input type="password" id="adminPass" placeholder="Parol" style="width: 100%; padding: 20px; margin-bottom: 40px; border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; background: #02060c; color: white;" required>
+                <button type="submit" class="submit-btn">TIZIMGA KIRISH</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="admin-layout" id="adminPanel" style="display: none;">
+        <aside class="sidebar">
+            <div class="sidebar-logo">MASION <span>FERIDE</span></div>
+            <ul class="sidebar-menu">
+                <li><a href="#" id="nav-dashboard" class="active" onclick="switchView('view-dashboard', 'Boshqaruv Paneli')"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="#" id="nav-users" onclick="switchView('view-users', 'Foydalanuvchilar')"><i class="fas fa-user-shield"></i> Foydalanuvchilar</a></li>
+                <li><a href="#" id="nav-products" onclick="switchView('view-products', 'Mahsulotlar')"><i class="fas fa-shopping-bag"></i> Mahsulotlar</a></li>
+                <li style="margin-top: 100px;"><a href="#" onclick="logout()" style="color: #ff4d4d;"><i class="fas fa-power-off"></i> Tizimdan chiqish</a></li>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <header class="header-admin">
+                <h1 id="pageTitle">Boshqaruv Paneli</h1>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div style="text-align: right;">
+                        <div id="adminNameDisplay" style="font-weight: 700; color: #d4af37;"></div>
+                        <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Bosh Admin</div>
+                    </div>
+                    <div style="width: 50px; height: 50px; background: #d4af37; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #02060c;">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- DASHBOARD VIEW -->
+            <div id="view-dashboard" class="admin-view">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-users-viewfinder"></i>
+                        <h3>Foydalanuvchilar</h3>
+                        <div class="value" id="statUsers">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-gem"></i>
+                        <h3>Mahsulotlar</h3>
+                        <div class="value" id="statProducts">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-layer-group"></i>
+                        <h3>Kategoriyalar</h3>
+                        <div class="value" id="statCategories">0</div>
+                    </div>
+                </div>
+
+                <div class="glass-panel">
+                    <h2>Oxirgi ro'yxatdan o'tganlar</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Foydalanuvchi</th>
+                                <th>Telefon</th>
+                                <th>Rol</th>
+                                <th>Ro'yxatdan o'tgan sana</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentUsersTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="view-users" class="admin-view" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <h2 style="margin: 0; font-family: 'Playfair Display'; font-size: 28px;">Barcha Foydalanuvchilar</h2>
+                    <button class="btn-add-user" onclick="showAddUserModal()">
+                        <i class="fas fa-user-plus"></i> YANGI QO'SHISH
+                    </button>
+                </div>
+                <div class="glass-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Foydalanuvchi</th>
+                                <th>Telefon</th>
+                                <th>Rol</th>
+                                <th>Sana</th>
+                                <th>Harakatlar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allUsersTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PRODUCTS VIEW -->
+            <div id="view-products" class="admin-view" style="display: none;">
+                <div class="glass-panel">
+                    <h2 id="productsTitle">Barcha Mahsulotlar</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Mahsulot</th>
+                                <th>Kategoriya</th>
+                                <th>Narxi</th>
+                                <th>Sotuvchi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allProductsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ADD USER MODAL -->
+    <div id="addUserModal" class="admin-modal">
+        <div class="admin-modal-content">
+            <h2>Yangi Foydalanuvchi</h2>
+            <form id="addUserForm">
+                <input type="text" id="newUserName" placeholder="To'liq Ism" required>
+                <input type="text" id="newUserPhone" placeholder="Telefon Raqam" required>
+                <input type="password" id="newUserPass" placeholder="Parol" required>
+                <select id="newUserRole">
+                    <option value="seller">Sotuvchi</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <div class="btn-group">
+                    <button type="button" class="btn-cancel" onclick="hideAddUserModal()">Bekor qilish</button>
+                    <button type="submit" class="btn-save">SAQLASH</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js?v=1.6"></script>
+    <script>
+
+        function switchView(viewId, title) {
+            document.querySelectorAll('.admin-view').forEach(el => el.style.display = 'none');
+            document.getElementById(viewId).style.display = 'block';
+            document.getElementById('pageTitle').innerText = title;
+            
+            document.querySelectorAll('.sidebar-menu a').forEach(el => el.classList.remove('active'));
+            document.getElementById('nav-' + viewId.split('-')[1]).classList.add('active');
+
+            if (viewId === 'view-dashboard') loadStats();
+            if (viewId === 'view-users') loadUsers();
+            if (viewId === 'view-products') loadProductsForAdmin();
+        }
+
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const phone = document.getElementById('adminPhone').value;
+            const password = document.getElementById('adminPass').value;
+
+            try {
+                const res = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, password })
+                });
+
+                if (!res.ok) throw new Error('Kirishda xatolik');
+                
+                const data = await res.json();
+                localStorage.setItem('admin_token', data.access_token);
+                checkAdminAuth();
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+
+        async function checkAdminAuth() {
+            const token = localStorage.getItem('admin_token');
+            if (!token) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/auth/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const user = await res.json();
+                
+                if (user.is_admin) {
+                    document.getElementById('adminLogin').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'grid';
+                    document.getElementById('adminNameDisplay').innerText = user.full_name;
+                    switchView('view-dashboard', 'Boshqaruv Paneli');
+                } else {
+                    alert('Siz admin emassiz!');
+                    logout();
+                }
+            } catch (err) {
+                logout();
+            }
+        }
+
+        async function loadStats() {
+            const token = localStorage.getItem('admin_token');
+            try {
+                const res = await fetch(`${API_BASE}/admin/stats`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                
+                document.getElementById('statUsers').innerText = data.users;
+                document.getElementById('statProducts').innerText = data.products;
+                document.getElementById('statCategories').innerText = data.categories;
+                
+                const tbody = document.getElementById('recentUsersTable');
+                tbody.innerHTML = data.recent_users.map(u => `
+                    <tr>
+                        <td style="font-weight: 600;">${u.full_name}</td>
+                        <td>${u.phone}</td>
+                        <td><span class="role-badge ${u.is_admin ? 'role-admin' : (u.is_seller ? 'role-seller' : 'role-user')}">${u.is_admin ? 'Admin' : (u.is_seller ? 'Sotuvchi' : 'Mijoz')}</span></td>
+                        <td style="color: #94a3b8;">${new Date(u.created_at).toLocaleDateString('uz-UZ')}</td>
+                    </tr>
+                `).join('');
+            } catch (err) {}
+        }
+
+        async function loadUsers() {
+            const token = localStorage.getItem('admin_token');
+            try {
+                const res = await fetch(`${API_BASE}/admin/users`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const users = await res.json();
+                
+                const tbody = document.getElementById('allUsersTable');
+                tbody.innerHTML = users.map(u => {
+                    let roleClass = 'role-user';
+                    let roleText = 'Mijoz';
+                    if (u.is_admin) { roleClass = 'role-admin'; roleText = 'Admin'; }
+                    else if (u.is_seller) { roleClass = 'role-seller'; roleText = 'Sotuvchi'; }
+                    
+                    let actions = `
+                        <div style="display: flex; gap: 10px;">
+                            ${u.id !== 1 ? `<button onclick="deleteUser(${u.id})" style="padding: 8px 15px; background: rgba(255, 77, 77, 0.1); color: #ff4d4d; border: 1px solid #ff4d4d; border-radius: 8px; cursor: pointer; font-size: 12px;"><i class="fas fa-trash"></i></button>` : ''}
+                            ${u.is_seller ? `<button onclick="filterProductsBySeller(${u.id}, '${u.full_name}')" style="padding: 8px 15px; background: rgba(0, 212, 255, 0.1); color: #00d4ff; border: 1px solid #00d4ff; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700;">MAHSULOTLARI</button>` : ''}
+                        </div>
+                    `;
+
+                    return `
+                        <tr>
+                            <td style="color: #d4af37; font-weight: 700;">#${u.id}</td>
+                            <td style="font-weight: 600;">${u.full_name}</td>
+                            <td>${u.phone}</td>
+                            <td><span class="role-badge ${roleClass}">${roleText}</span></td>
+                            <td style="color: #94a3b8;">${new Date(u.created_at).toLocaleDateString('uz-UZ')}</td>
+                            <td>${actions}</td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (err) {}
+        }
+
+        async function deleteUser(id) {
+            if (!confirm('Haqiqatdan ham bu foydalanuvchini o\'chirmoqchimisiz?')) return;
+            const token = localStorage.getItem('admin_token');
+            try {
+                const res = await fetch(`${API_BASE}/admin/users/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    alert('Foydalanuvchi o\'chirildi');
+                    loadUsers();
+                } else {
+                    const data = await res.json();
+                    alert(data.detail || 'Xatolik yuz berdi');
+                }
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        function showAddUserModal() {
+            document.getElementById('addUserModal').style.display = 'flex';
+        }
+
+        function hideAddUserModal() {
+            document.getElementById('addUserModal').style.display = 'none';
+        }
+
+        document.getElementById('addUserForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const token = localStorage.getItem('admin_token');
+            const userData = {
+                full_name: document.getElementById('newUserName').value,
+                phone: document.getElementById('newUserPhone').value,
+                password: document.getElementById('newUserPass').value,
+                is_seller: document.getElementById('newUserRole').value === 'seller',
+                is_admin: document.getElementById('newUserRole').value === 'admin'
+            };
+
+            try {
+                const res = await fetch(`${API_BASE}/admin/users`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                if (!res.ok) {
+                    const data = await res.json();
+                    throw new Error(data.detail || 'Xatolik yuz berdi');
+                }
+                
+                alert('Foydalanuvchi muvaffaqiyatli qo\'shildi!');
+                hideAddUserModal();
+                loadUsers();
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+
+        async function loadProductsForAdmin(sellerId = null, sellerName = null) {
+            let url = `${API_BASE}/products/`;
+            if (sellerId) {
+                url += `?seller_id=${sellerId}`;
+                document.getElementById('productsTitle').innerText = `${sellerName} - Mahsulotlari`;
+            } else {
+                document.getElementById('productsTitle').innerText = `Barcha Mahsulotlar`;
+            }
+
+            try {
+                const res = await fetch(url);
+                const products = await res.json();
+                
+                const tbody = document.getElementById('allProductsTable');
+                tbody.innerHTML = products.map(p => `
+                    <tr>
+                        <td style="color: #d4af37; font-weight: 700;">#${p.id}</td>
+                        <td style="font-weight: 600;"><img src="${p.image_url}" width="45" style="border-radius:10px; vertical-align:middle; margin-right:15px; border: 1px solid rgba(255,255,255,0.1);"> ${p.name}</td>
+                        <td><span style="color: #94a3b8;">${p.category}</span></td>
+                        <td style="font-weight: 700; color: #d4af37;">${p.price.toLocaleString()} so'm</td>
+                        <td>${p.seller_id || '-'}</td>
+                        <td><button onclick="deleteProduct(${p.id})" style="padding: 8px 15px; background: rgba(255, 77, 77, 0.1); color: #ff4d4d; border: 1px solid #ff4d4d; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700;"><i class="fas fa-trash-alt"></i></button></td>
+                    </tr>
+                `).join('');
+            } catch (err) {}
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('Haqiqatdan ham bu mahsulotni o\'chirmoqchimisiz?')) return;
+            const token = localStorage.getItem('admin_token');
+            try {
+                const res = await fetch(`${API_BASE}/products/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    alert('Mahsulot o\'chirildi');
+                    loadProductsForAdmin();
+                } else {
+                    alert('Xatolik yuz berdi');
+                }
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        function filterProductsBySeller(id, name) {
+            switchView('view-products', 'Mahsulotlar');
+            loadProductsForAdmin(id, name);
+        }
+
+        function logout() {
+            localStorage.removeItem('admin_token');
+            location.reload();
+        }
+
+        if (localStorage.getItem('admin_token')) {
+            checkAdminAuth();
+        }
+    </script>
+</body>
+</html>

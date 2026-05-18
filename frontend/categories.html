@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kategoriyalar — Masion Feride</title>
+    <link rel="stylesheet" href="assets/css/main.css?v=1.1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .category-card {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.5s ease;
+        }
+        .category-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+        .category-card:hover img {
+            transform: scale(1.1);
+        }
+        .category-card-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 40px 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            text-align: center;
+        }
+        .category-card-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .category-card-info span {
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <div class="container">
+                <span><i class="fas fa-crown"></i> Eksklyuziv Kolleksiya — Masion Feride</span>
+                <div class="header-links">
+                    <a href="index.html" style="color:white; text-decoration:none; margin-left:20px;">Asosiy</a>
+                    <a href="categories.html" style="color:white; text-decoration:none; margin-left:20px;">Kategoriyalar</a>
+                    <a href="add-product.html" style="color:white; text-decoration:none; margin-left:20px;">Mahsulot qo'shish</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-main container">
+            <div class="logo">
+                <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <h1>Masion <span>Feride</span></h1>
+                </a>
+            </div>
+            <div class="header-actions">
+                <div class="action-item" id="authBtn">
+                    <i class="far fa-user"></i>
+                    <span id="authText">Profil</span>
+                </div>
+                <a href="wishlist.html" class="action-item" style="text-decoration: none; color: inherit;">
+                    <i class="far fa-heart"></i>
+                    <span id="wishlistCount">0</span>
+                    <span>SARALANGAN</span>
+                </a>
+                <div class="action-item" id="cartBtn">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>Savat</span>
+                    <span id="cartCount">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container" style="min-height: 80vh; padding: 60px 0;">
+        <h2 style="font-family: 'Playfair Display'; font-size: 48px; text-align: center; margin-bottom: 20px;">Kategoriyalar</h2>
+        <p style="text-align: center; color: #888; max-width: 600px; margin: 0 auto 60px;">Masion Feride kolleksiyasining barcha yo'nalishlari bilan tanishing.</p>
+        
+        <div class="categories-grid" id="categoriesList">
+            <!-- Dynamic Categories via JS -->
+        </div>
+
+        <div id="categoryProducts" style="display: none; margin-top: 80px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+                <h2 id="selectedCategoryTitle" style="font-family: 'Playfair Display'; font-size: 32px;"></h2>
+                <button onclick="showCategories()" style="background: none; border: 1px solid #ddd; padding: 10px 20px; cursor: pointer; border-radius: 5px;">Hamma kategoriyalar</button>
+            </div>
+            <div class="products-grid" id="productsGrid"></div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div>
+                <h3>Masion Feride</h3>
+                <p style="opacity: 0.6; font-size: 14px; line-height: 2;">O'zbekistondagi eng eksklyuziv ayollar kiyimi butigi. Biz faqat eng sara va hashamatli liboslarni taklif etamiz.</p>
+            </div>
+            <div>
+                <h4>Butik</h4>
+                <ul>
+                    <li><a href="index.html">Yangi kolleksiya</a></li>
+                    <li><a href="categories.html">Barcha kiyimlar</a></li>
+                    <li><a href="categories.html?category=Aksessuarlar">Aksessuarlar</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Mijozlar</h4>
+                <ul>
+                    <li><a href="#">Yetkazib berish</a></li>
+                    <li><a href="#">Qaytarish</a></li>
+                    <li><a href="#">Maxfiylik</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Kontaktlar</h4>
+                <p style="opacity: 0.6; font-size: 14px; margin-bottom: 20px;">Toshkent, Amir Temur ko'chasi 108</p>
+                <div style="font-size: 20px; display: flex; gap: 20px;">
+                    <a href="https://instagram.com/bakhriddinova__f" target="_blank" style="color: inherit;"><i class="fab fa-instagram"></i></a>
+                    <a href="https://t.me/bakhriddinova__f" target="_blank" style="color: inherit;"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="auth-tabs">
+                <button class="tab-btn active" data-tab="login">KIRISH</button>
+                <button class="tab-btn" data-tab="register">RO'YXATDAN O'TISH</button>
+            </div>
+            <form id="loginForm" class="auth-form">
+                <input type="text" id="loginPhone" placeholder="Telefon raqami" required>
+                <input type="password" id="loginPassword" placeholder="Parol" required>
+                <button type="submit" class="submit-btn">KIRISH</button>
+            </form>
+            <form id="registerForm" class="auth-form" style="display: none;">
+                <input type="text" id="regName" placeholder="Ismingiz" required>
+                <input type="text" id="regPhone" placeholder="Telefon" required>
+                <input type="password" id="regPassword" placeholder="Parol" required>
+                <button type="submit" class="submit-btn">RO'YXATDAN O'TISH</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="close-modal">&times;</span>
+            <h2 style="font-family: 'Playfair Display'; margin-bottom: 40px; font-size: 32px;">Savat</h2>
+            <div id="cartItemsList" class="cart-list">
+                <!-- Cart items via JS -->
+            </div>
+            <div class="cart-total">
+                <div class="total-row">
+                    <span>Jami summasi:</span>
+                    <span id="cartTotalPrice">0 so'm</span>
+                </div>
+                <div class="order-fields" style="margin-top: 20px; display: grid; gap: 15px;">
+                    <input type="text" id="orderName" placeholder="Ismingiz" style="padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                    <input type="text" id="orderPhone" placeholder="Telefon raqamingiz" style="padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                    <textarea id="orderLocation" placeholder="Yetkazib berish manzili" style="padding: 12px; border: 1px solid #ddd; border-radius: 8px; resize: none;"></textarea>
+                </div>
+                <button id="confirmOrderBtn" class="submit-btn" style="background: #2d5a5e; margin-top: 20px;">BUYURTMANI TASDIQLASH (BOT ORQALI)</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js?v=1.3"></script>
+    <script>
+        function filterByCategory(cat) {
+            document.getElementById('categoriesList').style.display = 'none';
+            document.getElementById('categoryProducts').style.display = 'block';
+            document.getElementById('selectedCategoryTitle').innerText = cat;
+            filterProducts(cat);
+        }
+
+        function showCategories() {
+            document.getElementById('categoriesList').style.display = 'grid';
+            document.getElementById('categoryProducts').style.display = 'none';
+        }
+
+        // Initialize cart and auth on this page too
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProducts().then(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const cat = urlParams.get('category');
+                if (cat && cat !== 'Barchasi') {
+                    filterByCategory(cat);
+                }
+            });
+            checkAuth();
+            initEvents();
+        });
+    </script>
+</body>
+</html>

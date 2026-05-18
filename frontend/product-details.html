@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masion Feride — Mahsulot Tafsilotlari</title>
+    <link rel="stylesheet" href="assets/css/main.css?v=1.1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .product-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin: 60px 0; color: white; }
+        .add-to-cart-btn { background: #00d4ff !important; color: #050a14 !important; border: none !important; padding: 18px 40px !important; font-weight: 700 !important; cursor: pointer !important; width: 100%; transition: 0.3s; border-radius: 8px; }
+        .add-to-cart-btn:hover { background: #ffffff !important; transform: scale(1.02); }
+        .quantity-selector { display: flex; align-items: center; border: 1px solid #1a2c42; border-radius: 8px; background: #0c1626; }
+        .quantity-selector button { width: 45px; height: 55px; border: none; background: none; cursor: pointer; font-size: 18px; color: white; }
+        .quantity-selector input { width: 50px; border: none; text-align: center; font-weight: 700; font-size: 16px; background: none; color: white; }
+        .p-title-lg { color: white; }
+        .current { color: #00d4ff !important; }
+        @media (max-width: 768px) { .product-details-grid { grid-template-columns: 1fr; gap: 40px; } }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <div class="container">
+                <span><i class="fas fa-crown"></i> Eksklyuziv Kolleksiya — Masion Feride</span>
+                <div class="header-links">
+                    <a href="categories.html" style="color:white; text-decoration:none; margin-left:20px;">Kategoriyalar</a>
+                    <a href="add-product.html" style="color:white; text-decoration:none; margin-left:20px;">Mahsulot qo'shish</a>
+                    <a href="#" style="color:white; text-decoration:none; margin-left:20px;">Yordam</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-main container">
+            <div class="logo">
+                <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <h1>Masion <span>Feride</span></h1>
+                </a>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" placeholder="Hashamatni izlang..." id="searchInput">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+
+            <div class="header-actions">
+                <div class="action-item" id="authBtn">
+                    <i class="far fa-user"></i>
+                    <span id="authText">Profil</span>
+                </div>
+                <a href="wishlist.html" class="action-item" style="text-decoration: none; color: inherit;">
+                    <i class="far fa-heart"></i>
+                    <span id="wishlistCount">0</span>
+                    <span>Saralangan</span>
+                </a>
+                <div class="action-item" id="cartBtn">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span id="cartCount">0</span>
+                    <span>Savat</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container" style="padding: 80px 0;">
+        <div class="product-details-grid" id="productDetails">
+            <!-- Loading State -->
+            <div style="grid-column: 1/-1; text-align: center; padding: 100px;">
+                <div class="loader"></div>
+                <p>Yuklanmoqda...</p>
+            </div>
+        </div>
+
+        <section class="related-products" style="margin-top: 100px;">
+            <h2 class="section-title">O'xshash Mahsulotlar</h2>
+            <div class="products-grid" id="relatedGrid"></div>
+        </section>
+    </main>
+
+    <!-- Modals (Same as index.html) -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="auth-tabs">
+                <button class="tab-btn active" data-tab="login">KIRISH</button>
+                <button class="tab-btn" data-tab="register">RO'YXATDAN O'TISH</button>
+            </div>
+            <form id="loginForm" class="auth-form">
+                <input type="text" id="loginPhone" placeholder="Telefon raqami" required>
+                <input type="password" id="loginPassword" placeholder="Parol" required>
+                <button type="submit" class="submit-btn">KIRISH</button>
+            </form>
+            <form id="registerForm" class="auth-form" style="display: none;">
+                <input type="text" id="regName" placeholder="To'liq ism" required>
+                <input type="text" id="regPhone" placeholder="Telefon raqami" required>
+                <input type="password" id="regPassword" placeholder="Parol" required>
+                <button type="submit" class="submit-btn">RO'YXATDAN O'TISH</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="cartModal" class="modal">
+        <div class="modal-content" style="max-width: 500px; padding: 40px;">
+            <span class="close-modal">&times;</span>
+            <h2 style="font-family: 'Playfair Display'; margin-bottom: 30px;">Savat</h2>
+            <div id="cartItemsList" class="cart-items-list"></div>
+            <div class="cart-footer">
+                <div class="total-row">
+                    <span>Jami summasi:</span>
+                    <span id="cartTotalPrice">0 so'm</span>
+                </div>
+                <div class="order-fields" style="margin-top: 20px; display: grid; gap: 15px;">
+                    <input type="text" id="orderName" placeholder="Ismingiz" style="padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                    <input type="text" id="orderPhone" placeholder="Telefon raqamingiz" style="padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                    <textarea id="orderLocation" placeholder="Yetkazib berish manzili" style="padding: 12px; border: 1px solid #ddd; border-radius: 8px; resize: none;"></textarea>
+                </div>
+                <button id="confirmOrderBtn" class="submit-btn" style="background: #2d5a5e; margin-top: 20px;">BUYURTMANI TASDIQLASH (BOT ORQALI)</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div>
+                <h3>Masion Feride</h3>
+                <p style="opacity: 0.6; font-size: 14px; line-height: 2;">O'zbekistondagi eng eksklyuziv ayollar kiyimi butigi. Biz faqat eng sara va hashamatli liboslarni taklif etamiz.</p>
+            </div>
+            <div>
+                <h4>Butik</h4>
+                <ul>
+                    <li><a href="index.html">Yangi kolleksiya</a></li>
+                    <li><a href="categories.html">Barcha kiyimlar</a></li>
+                    <li><a href="categories.html?category=Aksessuarlar">Aksessuarlar</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Mijozlar</h4>
+                <ul>
+                    <li><a href="#">Yetkazib berish</a></li>
+                    <li><a href="#">Qaytarish</a></li>
+                    <li><a href="#">Maxfiylik</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Kontaktlar</h4>
+                <p style="opacity: 0.6; font-size: 14px; margin-bottom: 20px;">Toshkent, Amir Temur ko'chasi 108</p>
+                <div style="font-size: 20px; display: flex; gap: 20px;">
+                    <a href="https://instagram.com/bakhriddinova__f" target="_blank" style="color: inherit;"><i class="fab fa-instagram"></i></a>
+                    <a href="https://t.me/bakhriddinova__f" target="_blank" style="color: inherit;"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js?v=1.3"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+            if (productId) {
+                loadProductDetails(productId);
+            }
+        });
+
+        async function loadProductDetails(id) {
+            try {
+                const res = await fetch(`${API_BASE}/products/${id}`);
+                if (!res.ok) throw new Error('Mahsulot topilmadi');
+                const product = await res.json();
+                renderProductDetails(product);
+                loadRelatedProducts(product.category, product.id);
+            } catch (err) {
+                document.getElementById('productDetails').innerHTML = `<p style="text-align:center; color: red;">${err.message}</p>`;
+            }
+        }
+
+        function renderProductDetails(p) {
+            const container = document.getElementById('productDetails');
+            container.innerHTML = `
+                <div class="product-gallery animate-fade-in">
+                    <div class="main-img">
+                        <img src="${p.image_url}" alt="${p.name}">
+                    </div>
+                </div>
+                <div class="product-main-info animate-slide-up">
+                    <div class="p-cat">${p.category}</div>
+                    <h1 class="p-title-lg">${p.name}</h1>
+                    <div class="p-price-lg">
+                        <span class="current">${p.price.toLocaleString()} so'm</span>
+                        ${p.old_price ? `<span class="old">${p.old_price.toLocaleString()} so'm</span>` : ''}
+                    </div>
+                    <p class="p-description">${p.description}</p>
+                    
+                    <div class="purchase-options">
+                        <div class="quantity-selector">
+                            <button onclick="changeQty(-1)">-</button>
+                            <input type="number" id="buyQty" value="1" min="1">
+                            <button onclick="changeQty(1)">+</button>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart(${p.id})">SAVATGA QO'SHISH</button>
+                    </div>
+
+                    <div class="extra-info">
+                        <div class="info-item"><i class="fas fa-truck"></i> <span>Yetkazib berish: ${p.delivery_info}</span></div>
+                        <div class="info-item"><i class="fas fa-undo"></i> <span>7 kun ichida qaytarish</span></div>
+                        <div class="info-item"><i class="fas fa-shield-alt"></i> <span>100% xavfsiz to'lov</span></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadRelatedProducts(cat, currentId) {
+            try {
+                const res = await fetch(`${API_BASE}/products/?category=${cat}`);
+                const products = await res.json();
+                const related = products.filter(p => p.id !== currentId).slice(0, 4);
+                
+                const grid = document.getElementById('relatedGrid');
+                if (related.length === 0) {
+                    grid.innerHTML = '<p>Boshqa mahsulotlar topilmadi.</p>';
+                    return;
+                }
+                
+                // Using the function from main.js?v=1.3 but manually targeting relatedGrid
+                const originalGridId = 'productsGrid';
+                const tempDiv = document.createElement('div');
+                tempDiv.id = originalGridId;
+                document.body.appendChild(tempDiv);
+                
+                renderProducts(related);
+                grid.innerHTML = tempDiv.innerHTML;
+                document.body.removeChild(tempDiv);
+            } catch (err) {}
+        }
+
+        function changeQty(delta) {
+            const input = document.getElementById('buyQty');
+            let val = parseInt(input.value) + delta;
+            if (val < 1) val = 1;
+            input.value = val;
+        }
+    </script>
+</body>
+</html>
