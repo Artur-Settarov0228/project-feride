@@ -32,7 +32,8 @@ def create_product(db: Session, product_in: ProductCreate):
         reviews_count=product_in.reviews_count,
         badge=product_in.badge,
         delivery_info=product_in.delivery_info,
-        seller_id=product_in.seller_id
+        seller_id=product_in.seller_id,
+        sizes=product_in.sizes
     )
     db.add(db_product)
     db.commit()
