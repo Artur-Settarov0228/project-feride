@@ -24,7 +24,8 @@ def seed_products():
             category="Tashqi kiyim",
             rating=4.9,
             reviews_count=28,
-            badge="Yangi"
+            badge="Yangi",
+            sizes="S, M, L, XL"
         ),
         Product(
             name="Oversize Kurtka",
@@ -34,7 +35,8 @@ def seed_products():
             image_url="https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=500&q=80",
             category="Tashqi kiyim",
             rating=4.8,
-            reviews_count=15
+            reviews_count=15,
+            sizes="S, M, L"
         ),
         # Trikotaj
         Product(
@@ -46,7 +48,8 @@ def seed_products():
             category="Trikotaj",
             rating=5.0,
             reviews_count=42,
-            badge="Xit savdo"
+            badge="Xit savdo",
+            sizes="S, M, L"
         ),
         Product(
             name="Trikotaj Kostyum-Shim",
@@ -56,7 +59,8 @@ def seed_products():
             image_url="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&q=80",
             category="Trikotaj",
             rating=4.7,
-            reviews_count=19
+            reviews_count=19,
+            sizes="S, M, L"
         ),
         # Tolstovkalar
         Product(
@@ -67,7 +71,8 @@ def seed_products():
             image_url="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&q=80",
             category="Tolstovkalar",
             rating=4.6,
-            reviews_count=65
+            reviews_count=65,
+            sizes="S, M, L, XL"
         ),
         # Kiyim (General)
         Product(
@@ -78,7 +83,8 @@ def seed_products():
             image_url="https://images.unsplash.com/photo-1598033129183-c4f50c717658?w=500&q=80",
             category="Kiyim",
             rating=4.9,
-            reviews_count=31
+            reviews_count=31,
+            sizes="S, M, L"
         ),
         # Pidjak va kurtkalar
         Product(
@@ -89,7 +95,8 @@ def seed_products():
             image_url="https://images.unsplash.com/photo-1548624313-0396c75e4b1a?w=500&q=80",
             category="Pidjak va kurtkalar",
             rating=4.8,
-            reviews_count=12
+            reviews_count=12,
+            sizes="S, M, L"
         ),
         # Bluzkalar va ko'ylaklar
         Product(
@@ -100,7 +107,8 @@ def seed_products():
             image_url="https://images.unsplash.com/photo-1612336307429-8a898d10e223?w=500&q=80",
             category="Bluzkalar va ko'ylaklar",
             rating=4.7,
-            reviews_count=24
+            reviews_count=24,
+            sizes="S, M, L"
         ),
         Product(
             name="Elegant Kechki Ko'ylak",
@@ -111,9 +119,11 @@ def seed_products():
             category="Bluzkalar va ko'ylaklar",
             rating=5.0,
             reviews_count=8,
-            badge="Premium"
+            badge="Premium",
+            sizes="S, M, L"
         )
     ]
+
     
     db.add_all(products)
     db.commit()

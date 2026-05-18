@@ -8,7 +8,8 @@ def get_cart_items(db: Session, user_id: int):
 def add_to_cart(db: Session, user_id: int, item_in: CartItemCreate):
     existing = db.query(CartItem).filter(
         CartItem.user_id == user_id,
-        CartItem.product_id == item_in.product_id
+        CartItem.product_id == item_in.product_id,
+        CartItem.size == item_in.size
     ).first()
     
     if existing:
@@ -20,12 +21,14 @@ def add_to_cart(db: Session, user_id: int, item_in: CartItemCreate):
     new_item = CartItem(
         user_id=user_id,
         product_id=item_in.product_id,
-        quantity=item_in.quantity
+        quantity=item_in.quantity,
+        size=item_in.size
     )
     db.add(new_item)
     db.commit()
     db.refresh(new_item)
     return new_item
+
 
 def update_cart_item(db: Session, user_id: int, item_id: int, quantity: int):
     item = db.query(CartItem).filter(CartItem.id == item_id, CartItem.user_id == user_id).first()
@@ -46,10 +49,10 @@ def clear_cart(db: Session, user_id: int):
     db.query(CartItem).filter(CartItem.user_id == user_id).delete()
     db.commit()
 
-def decrement_cart_item(db: Session, user_id: int, product_id: int):
+def decrement_cart_item(db: Session, user_id: int, item_id: int):
     item = db.query(CartItem).filter(
         CartItem.user_id == user_id,
-        CartItem.product_id == product_id
+        CartItem.id == item_id
     ).first()
     
     if item:
@@ -63,3 +66,4 @@ def decrement_cart_item(db: Session, user_id: int, product_id: int):
             db.commit()
             return None
     return None
+

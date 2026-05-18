@@ -165,7 +165,8 @@ function initEvents() {
                 category: document.getElementById('prodCat').value,
                 image_url: document.getElementById('prodImage').value,
                 badge: document.getElementById('prodBadge').value || null,
-                delivery_info: "Ertaga"
+                delivery_info: "Ertaga",
+                sizes: document.getElementById('prodSizes').value || null
             };
 
             const token = localStorage.getItem('token') || localStorage.getItem('admin_token');
@@ -440,7 +441,7 @@ async function checkAuth() {
     } catch (err) {}
 }
 
-async function addToCart(id) {
+async function addToCart(id, size = null) {
     if (!currentUser) {
         showModal(document.getElementById('authModal'));
         return;
@@ -450,7 +451,7 @@ async function addToCart(id) {
         await fetch(`${API_BASE}/cart/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-            body: JSON.stringify({ product_id: parseInt(id), quantity: 1 })
+            body: JSON.stringify({ product_id: parseInt(id), quantity: 1, size: size })
         });
         alert('Savatga qo\'shildi!');
         loadCart();
@@ -486,18 +487,19 @@ function updateCartUI() {
 
     list.innerHTML = cartItems.map(item => {
         total += item.product.price * item.quantity;
+        const sizeBadge = item.size ? `<span style="font-size: 11px; background: rgba(0, 212, 255, 0.1); color: #00d4ff; padding: 3px 8px; border-radius: 12px; margin-left: 10px;">Razmer: ${item.size}</span>` : '';
         return `
             <div class="cart-item">
                 <img src="${item.product.image_url}" alt="">
                 <div class="cart-item-info">
-                    <h4>${item.product.name}</h4>
+                    <h4>${item.product.name} ${sizeBadge}</h4>
                     <p>${item.product.category}</p>
                     <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
                         <span style="font-weight: 700;">${item.product.price.toLocaleString()} so'm</span>
                         <div style="display: flex; align-items: center; gap: 10px; background: #f1f5f9; padding: 5px 12px; border-radius: 20px;">
-                            <button onclick="decrementFromCart(${item.product.id})" style="border: none; background: none; cursor: pointer; color: #64748b;"><i class="fas fa-minus"></i></button>
+                            <button onclick="decrementFromCart(${item.id})" style="border: none; background: none; cursor: pointer; color: #64748b;"><i class="fas fa-minus"></i></button>
                             <span style="font-weight: 700; color: #0f172a;">${item.quantity}</span>
-                            <button onclick="addToCart(${item.product.id})" style="border: none; background: none; cursor: pointer; color: #0f172a;"><i class="fas fa-plus"></i></button>
+                            <button onclick="addToCart(${item.product.id}, '${item.size || ''}')" style="border: none; background: none; cursor: pointer; color: #0f172a;"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
                 </div>

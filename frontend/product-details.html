@@ -17,6 +17,14 @@
         .p-title-lg { color: white; }
         .current { color: #00d4ff !important; }
         @media (max-width: 768px) { .product-details-grid { grid-template-columns: 1fr; gap: 40px; } }
+        
+        /* Premium Size Selector Styles */
+        .sizes-container { margin: 25px 0; }
+        .sizes-title { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 12px; font-weight: 600; }
+        .sizes-grid { display: flex; flex-wrap: wrap; gap: 12px; }
+        .size-select-btn { padding: 12px 22px; background: #0c1626; border: 1px solid #1a2c42; color: #94a3b8; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; font-size: 14px; }
+        .size-select-btn:hover { border-color: #00d4ff; color: white; background: rgba(0, 212, 255, 0.05); }
+        .size-select-btn.active { border-color: #00d4ff !important; background: rgba(0, 212, 255, 0.1) !important; color: #00d4ff !important; box-shadow: 0 0 15px rgba(0, 212, 255, 0.15); }
     </style>
 </head>
 <body>
@@ -175,8 +183,59 @@
             }
         }
 
+        let selectedSize = null;
+
+        function selectSize(btn, size) {
+            document.querySelectorAll('.size-select-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedSize = size;
+        }
+
+        function handleAddToCart(id, hasSizes) {
+            if (hasSizes && !selectedSize) {
+                alert("Iltimos, mahsulot razmerini tanlang!");
+                return;
+            }
+            const qty = parseInt(document.getElementById('buyQty').value) || 1;
+            addToCartWithSize(id, selectedSize, qty);
+        }
+
+        async function addToCartWithSize(id, size, qty) {
+            if (!currentUser) {
+                showModal(document.getElementById('authModal'));
+                return;
+            }
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch(`${API_BASE}/cart/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ product_id: parseInt(id), quantity: qty, size: size })
+                });
+                if (res.ok) {
+                    alert('Savatga qo\'shildi!');
+                    loadCart();
+                } else {
+                    alert('Xatolik yuz berdi.');
+                }
+            } catch (err) {}
+        }
+
         function renderProductDetails(p) {
+            selectedSize = null; // Reset selection
             const container = document.getElementById('productDetails');
+            
+            const sizeButtonsHtml = p.sizes ? `
+                <div class="sizes-container animate-slide-up">
+                    <div class="sizes-title">Razmer Tanglang:</div>
+                    <div class="sizes-grid">
+                        ${p.sizes.split(',').map(s => s.trim()).filter(s => s).map(size => `
+                            <button class="size-select-btn" onclick="selectSize(this, '${size}')">${size}</button>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : '';
+
             container.innerHTML = `
                 <div class="product-gallery animate-fade-in">
                     <div class="main-img">
@@ -192,13 +251,15 @@
                     </div>
                     <p class="p-description">${p.description}</p>
                     
-                    <div class="purchase-options">
+                    ${sizeButtonsHtml}
+                    
+                    <div class="purchase-options" style="margin-top: 30px;">
                         <div class="quantity-selector">
                             <button onclick="changeQty(-1)">-</button>
                             <input type="number" id="buyQty" value="1" min="1">
                             <button onclick="changeQty(1)">+</button>
                         </div>
-                        <button class="add-to-cart-btn" onclick="addToCart(${p.id})">SAVATGA QO'SHISH</button>
+                        <button class="add-to-cart-btn" onclick="handleAddToCart(${p.id}, ${p.sizes ? 'true' : 'false'})">SAVATGA QO'SHISH</button>
                     </div>
 
                     <div class="extra-info">

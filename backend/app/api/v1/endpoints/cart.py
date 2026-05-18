@@ -27,7 +27,8 @@ async def checkout(
     for item in items:
         items_data.append({
             "product": {"name": item.product.name, "price": item.product.price},
-            "quantity": item.quantity
+            "quantity": item.quantity,
+            "size": item.size
         })
     
     # Send to Telegram
@@ -86,11 +87,11 @@ def clear_cart(
     cart_crud.clear_cart(db, user_id=current_user.id)
     return {"detail": "Cart cleared"}
 
-@router.post("/decrement/{product_id}")
+@router.post("/decrement/{item_id}")
 def decrement_cart_item(
-    product_id: int,
+    item_id: int,
     current_user: User = Depends(deps.get_current_user),
     db: Session = Depends(deps.get_db)
 ):
-    item = cart_crud.decrement_cart_item(db, user_id=current_user.id, product_id=product_id)
+    item = cart_crud.decrement_cart_item(db, user_id=current_user.id, item_id=item_id)
     return {"detail": "Item quantity decreased", "item": item}

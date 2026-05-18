@@ -21,8 +21,10 @@ async def send_telegram_order(name: str, phone: str, location: str, items: list,
     
     for i, item in enumerate(items, 1):
         safe_product_name = html.escape(str(item['product']['name']))
-        message += f"{i}. <b>{safe_product_name}</b>\n"
+        size_str = f" (Razmer: {html.escape(str(item['size']))})" if item.get('size') else ""
+        message += f"{i}. <b>{safe_product_name}</b>{size_str}\n"
         message += f"   └ {item['quantity']} dona × {item['product']['price']:,} so'm\n"
+
     
     message += f"\n💰 <b>UMUMIY SUMMA:</b> <code>{total_price:,}</code> so'm\n"
     message += f"⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n"

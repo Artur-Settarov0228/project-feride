@@ -16,3 +16,5 @@ class Product(Base):
     badge = Column(String(50), nullable=True) # e.g., "Xit savdo", "Yangi"
     delivery_info = Column(String(100), default="Ertaga")
     seller_id = Column(Integer, nullable=True) # Nullable for older seeded products if needed
+    sizes = Column(String(500), nullable=True) # e.g., "S, M, L, XL" or "37, 38, 39, 40"
+

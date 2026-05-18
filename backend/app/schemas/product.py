@@ -13,6 +13,8 @@ class ProductBase(BaseModel):
     badge: Optional[str] = None
     delivery_info: str = "Ertaga"
     seller_id: Optional[int] = None
+    sizes: Optional[str] = None
+
 
 class ProductCreate(ProductBase):
     pass

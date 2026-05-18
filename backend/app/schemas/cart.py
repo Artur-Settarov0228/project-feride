@@ -1,9 +1,12 @@
 from pydantic import BaseModel
 from app.schemas.product import ProductResponse
+from typing import Optional
 
 class CartItemBase(BaseModel):
     product_id: int
     quantity: int = 1
+    size: Optional[str] = None
+
 
 class CartItemCreate(CartItemBase):
     pass
